@@ -1,0 +1,193 @@
+public class Main {
+
+    // Book information stored in parallel arrays
+
+    public static void main(String[] args) {
+
+        // Display a welcome message
+    import java.util.Arrays;
+    import java.util.Scanner;
+    import java.util.List;
+    import java.util.function.Predicate;
+
+        public class Main {
+
+            // Store book titles
+            static String[] titles = {
+                    "Things Fall Apart",
+                    "The River Between",
+                    "Java Programming"
+            };
+
+            // Store book authors
+            static String[] authors = {
+                    "Amadou Gillen",
+                    "Ebrima Saine",
+                    "Amadou Beyai"
+            };
+
+            // Store book ISBN numbers
+            static String[] isbns = {
+                    "9780385474542",
+                    "9780143106692",
+                    "9780071808552"
+            };
+
+            // Store book availability
+            static boolean[] available = {
+                    true,
+                    true,
+                    false
+            };
+
+            Scanner scanner = new Scanner(System.in);
+
+            System.out.print("Enter book title to search: ");
+            String searchTitle = scanner.nextLine();
+
+            int result = searchBook(searchTitle);
+
+            if (result != -1) {
+
+                System.out.println("\nBook found!");
+                System.out.println("Title: " + titles[result]);
+                System.out.println("Author: " + authors[result]);
+                System.out.println("ISBN: " + isbns[result]);
+                System.out.println("Available: " + available[result]);
+
+            } else {
+
+                System.out.println("\nBook not found!");
+            }
+
+            public static void main(String[] args) {
+
+                System.out.println("==================================");
+                System.out.println("       LIBRATRACK SYSTEM");
+                System.out.println("==================================");
+
+                System.out.println("Total Books: " + titles.length);
+
+            }
+
+            toggleBookStatus(scanner);
+
+            printCatalog();
+
+
+            System.out.println("New Book: " + titles[titles.length - 1]);
+            System.out.println("New Author: " + authors[authors.length - 1]);
+            System.out.println("New ISBN: " + isbns[isbns.length - 1]);
+            System.out.println("Available: " + available[available.length - 1]);
+            Scanner scanner = new Scanner(System.in);
+
+            addBook(scanner);
+
+        System.out.println("\nTotal Books: " + titles.length);
+        }
+        public static void addBook(Scanner scanner) {
+
+            System.out.println("\n========== ADD NEW BOOK ==========");
+
+            // Get book information from the user
+            System.out.print("Enter book title: ");
+            String newTitle = scanner.nextLine();
+
+            System.out.print("Enter author's name: ");
+            String newAuthor = scanner.nextLine();
+
+            System.out.print("Enter ISBN: ");
+            String newIsbn = scanner.nextLine();
+
+            // Resize the arrays
+            titles = Arrays.copyOf(titles, titles.length + 1);
+            authors = Arrays.copyOf(authors, authors.length + 1);
+            isbns = Arrays.copyOf(isbns, isbns.length + 1);
+            available = Arrays.copyOf(available, available.length + 1);
+
+            // Add the new book at the last index
+            int newIndex = titles.length - 1;
+
+            titles[newIndex] = newTitle;
+            authors[newIndex] = newAuthor;
+            isbns[newIndex] = newIsbn;
+            available[newIndex] = true;
+
+            System.out.println("\nBook added successfully!");
+        }
+        public static int searchBook(String searchTitle) {
+
+            for (int i = 0; i < titles.length; i++) {
+
+                if (titles[i].equalsIgnoreCase(searchTitle)) {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+        public static void printCatalog() {
+
+            System.out.println("\n========== LIBRARY CATALOG ==========");
+
+            if (titles.length == 0) {
+                System.out.println("No books available in the catalog.");
+                return;
+            }
+
+            for (int i = 0; i < titles.length; i++) {
+
+                System.out.println("\nBook " + (i + 1));
+
+                System.out.println("Title: " + titles[i]);
+                System.out.println("Author: " + authors[i]);
+                System.out.println("ISBN: " + isbns[i]);
+
+                if (available[i]) {
+                    System.out.println("Availability: Available");
+                } else {
+                    System.out.println("Availability: Borrowed");
+                }
+
+                System.out.println("-----------------------------------");
+            }
+
+            System.out.println("Total Books: " + titles.length);
+        }
+        public static void toggleBookStatus(Scanner scanner) {
+
+            System.out.println("\n========== CHECKOUT / RETURN ==========");
+
+            System.out.print("Enter the book title: ");
+            String searchTitle = scanner.nextLine();
+
+            // Search for the book
+            int index = searchBook(searchTitle);
+
+            // Check whether the book exists
+            if (index == -1) {
+
+                System.out.println("Book not found!");
+
+            } else {
+
+                // Check availability
+                if (available[index]) {
+
+                    available[index] = false;
+
+                    System.out.println("Book checked out successfully!");
+                    System.out.println("Title: " + titles[index]);
+
+                } else {
+
+                    available[index] = true;
+
+                    System.out.println("Book returned successfully!");
+                    System.out.println("Title: " + titles[index]);
+
+                }
+            }
+        }
+    }
+}
