@@ -1,5 +1,9 @@
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -59,6 +63,18 @@ public class Main {
         } else {
             System.out.println("Book not found.");
         }
+
+        List<Book> books = new ArrayList<>();
+
+        books.add(new Book("Things Fall Apart", "Amadou Gillen",
+                "9780385474542", true));
+
+        books.add(new Book("The River Between", "Ebrima Saine",
+                "9780143106692", true));
+
+        books.add(new Book("Java Programming", "Amadou Beyai",
+                "9780071808552", false));
+        displayAvailableBooks(books);
 
         // Add a new book
         addBook(scanner);
@@ -180,4 +196,14 @@ public class Main {
                 System.out.println("Title: " + titles[index]);
             }
         }
+    }
+    public static void displayAvailableBooks(List<Book> books) {
+
+        System.out.println("\n===== AVAILABLE BOOKS =====");
+
+        books.stream()
+                .filter(Book::isAvailable)
+                .sorted(Comparator.comparing(Book::getTitle))
+                .forEach(System.out::println);
+
     }
