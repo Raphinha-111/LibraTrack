@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class Book {
 
     // Fields
@@ -7,6 +5,18 @@ public class Book {
     private String author;
     private String isbn;
     private boolean available;
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
     // Constructor
     public Book(String title, String author, String isbn, boolean available) {
@@ -45,17 +55,5 @@ public class Book {
                 "\nAuthor: " + author +
                 "\nISBN: " + isbn +
                 "\nAvailability: " + status;
-    }
-
-    // =====================================
-    // SEARCH BOOK
-    // =====================================
-    public static Book searchBook(List<Book> books, String searchTitle) {
-        for (Book book : books) {
-            if (book.getTitle().equalsIgnoreCase(searchTitle)) {
-                return book;
-            }
-        }
-        return null;
     }
 }

@@ -25,6 +25,17 @@ public class Main {
         System.out.println("==================================");
 
         runMenu(books);
+
+        Student student = new Student("STU001", "Amadou Gillen");
+        Faculty faculty = new Faculty("FAC001", "Ebrima Saine");
+
+        System.out.println("\n===== MEMBER BORROWING LIMITS =====");
+
+        System.out.println(student.getName() +
+                " (Student): " + student.getBorrowLimit() + " books");
+
+        System.out.println(faculty.getName() +
+                " (Faculty): " + faculty.getBorrowLimit() + " books");
     }
 
     // =====================================
