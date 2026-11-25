@@ -12,6 +12,10 @@ public class Main {
 
         public class Main {
 
+            // =====================================
+            // BOOK INFORMATION IN PARALLEL ARRAYS
+            // =====================================
+
             // Store book titles
             static String[] titles = {
                     "Things Fall Apart",
@@ -39,6 +43,10 @@ public class Main {
                     true,
                     false
             };
+
+            // =====================================
+            // MAIN METHOD
+            // =====================================
 
             Scanner scanner = new Scanner(System.in);
 
@@ -70,10 +78,7 @@ public class Main {
 
             }
 
-            toggleBookStatus(scanner);
-
             printCatalog();
-
 
             System.out.println("New Book: " + titles[titles.length - 1]);
             System.out.println("New Author: " + authors[authors.length - 1]);
@@ -85,7 +90,12 @@ public class Main {
 
         System.out.println("\nTotal Books: " + titles.length);
         }
-        public static void addBook(Scanner scanner) {
+
+
+        // =====================================
+        // ADD NEW BOOK
+        // =====================================
+            public static void addBook(Scanner scanner) {
 
             System.out.println("\n========== ADD NEW BOOK ==========");
 
@@ -135,6 +145,14 @@ public class Main {
                 return;
             }
 
+            toggleBookStatus(scanner);
+
+            // =====================================
+            // DISPLAY CATALOG
+            // =====================================
+
+            public static void printCatalog() {
+
             for (int i = 0; i < titles.length; i++) {
 
                 System.out.println("\nBook " + (i + 1));
@@ -153,6 +171,16 @@ public class Main {
             }
 
             System.out.println("Total Books: " + titles.length);
+        }
+        // =====================================
+        // SEARCH BOOK
+        // =====================================
+
+        public static int searchBook(String searchTitle) {
+
+            // Your existing searchBook implementation goes here.
+
+            return -1;
         }
         public static void toggleBookStatus(Scanner scanner) {
 
