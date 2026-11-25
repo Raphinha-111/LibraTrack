@@ -1,7 +1,5 @@
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -9,23 +7,24 @@ public class Main {
 
     public static void main(String[] args) {
 
-        List<Book> books = new ArrayList<>();
+        Library library = new Library();
 
-        books.add(new Book("Things Fall Apart", "Amadou Gillen",
+        library.addBook(new Book("Things Fall Apart", "Amadou Gillen",
                 "9780385474542", true));
 
-        books.add(new Book("The River Between", "Ebrima Saine",
+        library.addBook(new Book("The River Between", "Ebrima Saine",
                 "9780143106692", true));
 
-        books.add(new Book("Java Programming", "Amadou Beyai",
+        library.addBook(new Book("Java Programming", "Amadou Beyai",
                 "9780071808552", false));
 
         System.out.println("==================================");
         System.out.println("       LIBRATRACK SYSTEM");
         System.out.println("==================================");
 
-        runMenu(books);
+        runMenu(library);
 
+        // This part runs AFTER you choose 6 - Exit
         Student student = new Student("STU001", "Amadou Gillen");
         Faculty faculty = new Faculty("FAC001", "Ebrima Saine");
 
@@ -41,17 +40,17 @@ public class Main {
     // =====================================
     // MENU
     // =====================================
-    public static void runMenu(List<Book> books) {
+    public static void runMenu(Library library) {
 
         Scanner scanner = new Scanner(System.in);
 
         Map<String, Runnable> menuActions = new HashMap<>();
 
-        menuActions.put("1", () -> addBook(books, scanner));
-        menuActions.put("2", () -> searchBook(books, scanner));
-        menuActions.put("3", () -> printCatalog(books));
-        menuActions.put("4", () -> displayAvailableBooks(books));
-        menuActions.put("5", () -> toggleBookStatus(books, scanner));
+        menuActions.put("1", () -> addBook(library, scanner));
+        menuActions.put("2", () -> searchBook(library, scanner));
+        menuActions.put("3", () -> library.displayBooks());
+        menuActions.put("4", () -> displayAvailableBooks(library));
+        menuActions.put("5", () -> toggleBookStatus(library, scanner));
 
         boolean running = true;
 
@@ -89,7 +88,7 @@ public class Main {
     // =====================================
     // ADD NEW BOOK
     // =====================================
-    public static void addBook(List<Book> books, Scanner scanner) {
+    public static void addBook(Library library, Scanner scanner) {
 
         System.out.println("\n========== ADD NEW BOOK ==========");
 
@@ -102,7 +101,7 @@ public class Main {
         System.out.print("Enter ISBN: ");
         String newIsbn = scanner.nextLine();
 
-        books.add(new Book(newTitle, newAuthor, newIsbn, true));
+        library.addBook(new Book(newTitle, newAuthor, newIsbn, true));
 
         System.out.println("\nBook added successfully!");
         System.out.println("New Book: " + newTitle);
@@ -112,15 +111,14 @@ public class Main {
     }
 
     // =====================================
-    // SEARCH BOOK - MENU VERSION
+    // SEARCH BOOK
     // =====================================
-    public static void searchBook(List<Book> books, Scanner scanner) {
+    public static void searchBook(Library library, Scanner scanner) {
 
         System.out.print("\nEnter book title to search: ");
         String searchTitle = scanner.nextLine();
 
-        // FIXED: calls the method below, NOT Book.searchBook
-        Book result = searchBook(books, searchTitle);
+        Book result = library.searchBook(searchTitle);
 
         if (result != null) {
             System.out.println("Book found:");
@@ -131,46 +129,13 @@ public class Main {
     }
 
     // =====================================
-    // SEARCH BOOK - LOGIC VERSION
-    // =====================================
-    public static Book searchBook(List<Book> books, String searchTitle) {
-        for (Book book : books) {
-            if (book.getTitle().equalsIgnoreCase(searchTitle)) {
-                return book;
-            }
-        }
-        return null;
-    }
-
-    // =====================================
-    // DISPLAY CATALOG
-    // =====================================
-    public static void printCatalog(List<Book> books) {
-
-        System.out.println("\n========== LIBRARY CATALOG ==========");
-
-        if (books.isEmpty()) {
-            System.out.println("No books available in the catalog.");
-            return;
-        }
-
-        for (int i = 0; i < books.size(); i++) {
-            System.out.println("\nBook " + (i + 1));
-            System.out.println(books.get(i));
-            System.out.println("-----------------------------------");
-        }
-
-        System.out.println("Total Books: " + books.size());
-    }
-
-    // =====================================
     // DISPLAY AVAILABLE BOOKS
     // =====================================
-    public static void displayAvailableBooks(List<Book> books) {
+    public static void displayAvailableBooks(Library library) {
 
         System.out.println("\n===== AVAILABLE BOOKS =====");
 
-        books.stream()
+        library.getBooks().stream()
                 .filter(Book::isAvailable)
                 .sorted(Comparator.comparing(Book::getTitle))
                 .forEach(System.out::println);
@@ -179,15 +144,14 @@ public class Main {
     // =====================================
     // CHECKOUT / RETURN
     // =====================================
-    public static void toggleBookStatus(List<Book> books, Scanner scanner) {
+    public static void toggleBookStatus(Library library, Scanner scanner) {
 
         System.out.println("\n========== CHECKOUT / RETURN ==========");
 
         System.out.print("Enter the book title: ");
         String searchTitle = scanner.nextLine();
 
-        // FIXED: calls the method in Main, NOT Book.searchBook
-        Book book = searchBook(books, searchTitle);
+        Book book = library.searchBook(searchTitle);
 
         if (book == null) {
             System.out.println("Book not found!");
