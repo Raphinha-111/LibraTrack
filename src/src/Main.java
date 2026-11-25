@@ -157,11 +157,11 @@ public class Main {
             System.out.println("Book not found!");
         } else {
             if (book.isAvailable()) {
-                book.setAvailable(false);
+                book.borrow();
                 System.out.println("Book checked out successfully!");
                 System.out.println("Title: " + book.getTitle());
             } else {
-                book.setAvailable(true);
+                book.returnBook();
                 System.out.println("Book returned successfully!");
                 System.out.println("Title: " + book.getTitle());
             }
