@@ -1,68 +1,13 @@
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
 
-}
-    // =====================================
-    // BOOK INFORMATION IN PARALLEL ARRAYS
-    // =====================================
-
-    // Store book titles
-    static String[] titles = {
-            "Things Fall Apart",
-            "The River Between",
-            "Java Programming"
-    };
-
-    // Store book authors
-    static String[] authors = {
-            "Amadou Gillen",
-            "Ebrima Saine",
-            "Amadou Beyai"
-    };
-
-    // Store book ISBN numbers
-    static String[] isbns = {
-            "9780385474542",
-            "9780143106692",
-            "9780071808552"
-    };
-
-    // Store book availability
-    static boolean[] available = {
-            true,
-            true,
-            false
-    };
-
     public static void main(String[] args) {
-
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("==================================");
-        System.out.println("       LIBRATRACK SYSTEM");
-        System.out.println("==================================");
-        System.out.println("Total Books: " + titles.length);
-
-        // Display all books
-        printCatalog();
-
-        // Search for a book
-        System.out.print("\nEnter book title to search: ");
-        String searchTitle = scanner.nextLine();
-
-        int result = searchBook(searchTitle);
-
-        if (result != -1) {
-            System.out.println("Book found: " + titles[result]);
-        } else {
-            System.out.println("Book not found.");
-        }
 
         List<Book> books = new ArrayList<>();
 
@@ -74,70 +19,69 @@ public class Main {
 
         books.add(new Book("Java Programming", "Amadou Beyai",
                 "9780071808552", false));
-        displayAvailableBooks(books);
 
-        // Add a new book
-        addBook(scanner);
+        System.out.println("==================================");
+        System.out.println("       LIBRATRACK SYSTEM");
+        System.out.println("==================================");
 
-        // Checkout or return a book
-        toggleBookStatus(scanner);
+        runMenu(books);
+    }
 
-        // Display updated catalog
-        printCatalog();
+    // =====================================
+    // MENU
+    // =====================================
+    public static void runMenu(List<Book> books) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        Map<String, Runnable> menuActions = new HashMap<>();
+
+        menuActions.put("1", () -> addBook(books, scanner));
+        menuActions.put("2", () -> searchBook(books, scanner));
+        menuActions.put("3", () -> printCatalog(books));
+        menuActions.put("4", () -> displayAvailableBooks(books));
+        menuActions.put("5", () -> toggleBookStatus(books, scanner));
+
+        boolean running = true;
+
+        while (running) {
+
+            System.out.println("\n========== LIBRATRACK ==========");
+            System.out.println("1. Add a Book");
+            System.out.println("2. Search for a Book");
+            System.out.println("3. Display All Books");
+            System.out.println("4. Display Available Books");
+            System.out.println("5. Borrow / Return a Book");
+            System.out.println("6. Exit");
+
+            System.out.print("Enter your choice: ");
+            String choice = scanner.nextLine();
+
+            if (choice.equals("6")) {
+                running = false;
+                System.out.println("Thank you for using LibraTrack!");
+                continue;
+            }
+
+            Runnable action = menuActions.get(choice);
+
+            if (action != null) {
+                action.run();
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
 
         scanner.close();
-    }
-    // SEARCH BOOK
-    // =====================================
-    public static int searchBook(String searchTitle) {
-        for (int i = 0; i < titles.length; i++) {
-            if (titles[i].equalsIgnoreCase(searchTitle)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    // =====================================
-    // DISPLAY CATALOG
-    // =====================================
-    public static void printCatalog() {
-
-        System.out.println("\n========== LIBRARY CATALOG ==========");
-
-        if (titles.length == 0) {
-            System.out.println("No books available in the catalog.");
-            return;
-        }
-
-        for (int i = 0; i < titles.length; i++) {
-
-            System.out.println("\nBook " + (i + 1));
-
-            System.out.println("Title: " + titles[i]);
-            System.out.println("Author: " + authors[i]);
-            System.out.println("ISBN: " + isbns[i]);
-
-            if (available[i]) {
-                System.out.println("Availability: Available");
-            } else {
-                System.out.println("Availability: Borrowed");
-            }
-
-            System.out.println("-----------------------------------");
-        }
-
-        System.out.println("Total Books: " + titles.length);
     }
 
     // =====================================
     // ADD NEW BOOK
     // =====================================
-    public static void addBook(Scanner scanner) {
+    public static void addBook(List<Book> books, Scanner scanner) {
 
         System.out.println("\n========== ADD NEW BOOK ==========");
 
-        // Get book information from the user
         System.out.print("Enter book title: ");
         String newTitle = scanner.nextLine();
 
@@ -147,56 +91,70 @@ public class Main {
         System.out.print("Enter ISBN: ");
         String newIsbn = scanner.nextLine();
 
-        // Resize the arrays
-        titles = Arrays.copyOf(titles, titles.length + 1);
-        authors = Arrays.copyOf(authors, authors.length + 1);
-        isbns = Arrays.copyOf(isbns, isbns.length + 1);
-        available = Arrays.copyOf(available, available.length + 1);
-
-        // Add the new book at the last index
-        int newIndex = titles.length - 1;
-
-        titles[newIndex] = newTitle;
-        authors[newIndex] = newAuthor;
-        isbns[newIndex] = newIsbn;
-        available[newIndex] = true;
+        books.add(new Book(newTitle, newAuthor, newIsbn, true));
 
         System.out.println("\nBook added successfully!");
-        System.out.println("New Book: " + titles[newIndex]);
-        System.out.println("New Author: " + authors[newIndex]);
-        System.out.println("New ISBN: " + isbns[newIndex]);
-        System.out.println("Available: " + available[newIndex]);
+        System.out.println("New Book: " + newTitle);
+        System.out.println("New Author: " + newAuthor);
+        System.out.println("New ISBN: " + newIsbn);
+        System.out.println("Available: true");
     }
 
     // =====================================
-    // CHECKOUT / RETURN
+    // SEARCH BOOK - MENU VERSION
     // =====================================
-    public static void toggleBookStatus(Scanner scanner) {
+    public static void searchBook(List<Book> books, Scanner scanner) {
 
-        System.out.println("\n========== CHECKOUT / RETURN ==========");
-
-        System.out.print("Enter the book title: ");
+        System.out.print("\nEnter book title to search: ");
         String searchTitle = scanner.nextLine();
 
-        // Search for the book
-        int index = searchBook(searchTitle);
+        // FIXED: calls the method below, NOT Book.searchBook
+        Book result = searchBook(books, searchTitle);
 
-        // Check whether the book exists
-        if (index == -1) {
-            System.out.println("Book not found!");
+        if (result != null) {
+            System.out.println("Book found:");
+            System.out.println(result);
         } else {
-            // Check availability
-            if (available[index]) {
-                available[index] = false;
-                System.out.println("Book checked out successfully!");
-                System.out.println("Title: " + titles[index]);
-            } else {
-                available[index] = true;
-                System.out.println("Book returned successfully!");
-                System.out.println("Title: " + titles[index]);
-            }
+            System.out.println("Book not found.");
         }
     }
+
+    // =====================================
+    // SEARCH BOOK - LOGIC VERSION
+    // =====================================
+    public static Book searchBook(List<Book> books, String searchTitle) {
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(searchTitle)) {
+                return book;
+            }
+        }
+        return null;
+    }
+
+    // =====================================
+    // DISPLAY CATALOG
+    // =====================================
+    public static void printCatalog(List<Book> books) {
+
+        System.out.println("\n========== LIBRARY CATALOG ==========");
+
+        if (books.isEmpty()) {
+            System.out.println("No books available in the catalog.");
+            return;
+        }
+
+        for (int i = 0; i < books.size(); i++) {
+            System.out.println("\nBook " + (i + 1));
+            System.out.println(books.get(i));
+            System.out.println("-----------------------------------");
+        }
+
+        System.out.println("Total Books: " + books.size());
+    }
+
+    // =====================================
+    // DISPLAY AVAILABLE BOOKS
+    // =====================================
     public static void displayAvailableBooks(List<Book> books) {
 
         System.out.println("\n===== AVAILABLE BOOKS =====");
@@ -205,5 +163,33 @@ public class Main {
                 .filter(Book::isAvailable)
                 .sorted(Comparator.comparing(Book::getTitle))
                 .forEach(System.out::println);
-
     }
+
+    // =====================================
+    // CHECKOUT / RETURN
+    // =====================================
+    public static void toggleBookStatus(List<Book> books, Scanner scanner) {
+
+        System.out.println("\n========== CHECKOUT / RETURN ==========");
+
+        System.out.print("Enter the book title: ");
+        String searchTitle = scanner.nextLine();
+
+        // FIXED: calls the method in Main, NOT Book.searchBook
+        Book book = searchBook(books, searchTitle);
+
+        if (book == null) {
+            System.out.println("Book not found!");
+        } else {
+            if (book.isAvailable()) {
+                book.setAvailable(false);
+                System.out.println("Book checked out successfully!");
+                System.out.println("Title: " + book.getTitle());
+            } else {
+                book.setAvailable(true);
+                System.out.println("Book returned successfully!");
+                System.out.println("Title: " + book.getTitle());
+            }
+        }
+    }
+}
